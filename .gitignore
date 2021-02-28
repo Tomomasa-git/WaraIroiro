@@ -30,3 +30,11 @@
 *.exe
 *.out
 *.app
+
+
+# Figure
+*.pdf
+*.eps
+*.ps
+*.png
+*.jpg
