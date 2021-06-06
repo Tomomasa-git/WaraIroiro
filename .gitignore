@@ -42,3 +42,9 @@
 
 # Vim
 *.swp
+
+# Root file
+*.root
+
+# binary
+
