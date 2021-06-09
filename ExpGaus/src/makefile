@@ -24,8 +24,10 @@ CXXLIBS = $(ROOTLIBS)
 #OBJS1   = TransientExp.o Setting.o
 #TARGET1 = TransDecayExp   Setting
 #OBJS1   = TransDecayExp.o Setting.o
-TARGET1 = RandTransExp   Setting
-OBJS1   = RandTransExp.o Setting.o
+#TARGET1 = RandTransExp   Setting
+#OBJS1   = RandTransExp.o Setting.o
+TARGET1 = MyConvTransExp   Setting
+OBJS1   = MyConvTransExp.o Setting.o
 
 all: $(TARGET1)
 

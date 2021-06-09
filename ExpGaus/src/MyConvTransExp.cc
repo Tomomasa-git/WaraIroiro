@@ -76,7 +76,7 @@ TString DrawOption(int Num=0, int Type=0);
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 int main( int argc, char** argv ){
-	int ItNum=0;
+	int ItNum=1;
 	int const NofCanv = 5;
 	int const NofHist = 5;
 	int const MaxItr=5E+6;
@@ -85,7 +85,7 @@ int main( int argc, char** argv ){
 	Setting *MySetting;
 	TCanvas *Ca[NofCanv];
 	TH1D *hRaw[NofHist], *hConv[NofHist];
-	TF1 *f[NofHist];
+//	TF1 *f[NofHist];
 	TFrame *fr[NofHist][2];
 	TLegend *Leg[NofHist][2];
 	TFile *ifp;
@@ -133,6 +133,9 @@ int main( int argc, char** argv ){
 	fig=Form("./fig/MyConvTransExp_%03d.pdf",ItNum);
 	root=Form("./fig/MyConvTransExp_%03d.root",ItNum);
 
+	//////////////////
+	//    Define    //
+	//////////////////
 	//Canvavs
 	for(int i=0; i<NofCanv; i++){
 		Ca[i] = new TCanvas( Form("Ca[%d]",i), Form("Ca[%d]",i), 1282,1944 );
@@ -186,9 +189,9 @@ int main( int argc, char** argv ){
 			for(int j=0; j<NofHist; j++){
 				gRandom->SetSeed(0);
 				delta=gRandom->Gaus(0.,sigma[j]);
-				x+=delta;
-				hConv[j]->Fill(x);
+				hConv[j]->Fill(x+delta);
 				if( (i%100000)==0 )cout<<i<<" "<<j<<endl;
+				delta=0.;
 			}
 		}else;
 		
@@ -214,10 +217,15 @@ int main( int argc, char** argv ){
 		Leg[i][1]->Draw();
 	}
 	
+	////////////
+	//  Save  //
+	////////////
+	//As PDF
 	Ca[0]->Print(fig+"[", "pdf");
 	for(int i=0; i<NofCanv; i++)Ca[i]->Print(fig);
 	Ca[NofCanv-1]->Print(fig+"]", "pdf");
 
+	//As Root file
 	ifp = new TFile(root,"recreate");
 	ifp->cd();
 	for(int i=0; i<NofCanv; i++)Ca[i]->Write( Form("Ca_%02d",i) );
@@ -225,7 +233,6 @@ int main( int argc, char** argv ){
 	for(int i=0; i<NofHist; i++)hConv[i] -> Write( Form("hConv_%02d",i) );
 	ifp->Close();
 
-	delete MySetting;
 	delete MySetting;
 
 	gSystem->Exit(-1);

@@ -47,4 +47,18 @@
 *.root
 
 # binary
+/ExpGaus/bin/
+/ExpGaus/lib/
+/ExpGaus/fig/
 
+/HypChart/bin/
+/HypChart/lib/
+/HypChart/fig/
+
+/HyperDiag/bin/
+/HyperDiag/lib/
+/HyperDiag/fig/
+
+/htl/bin/
+/htl/lib/
+/htl/fig/
