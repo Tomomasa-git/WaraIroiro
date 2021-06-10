@@ -34,8 +34,11 @@ using namespace std;
 #include "TGraph.h"
 #include "TGraphErrors.h"
 #include "TGraphAsymmErrors.h"
+#include "TGraph2D.h"
+#include "TGraph2DErrors.h"
 #include "TAxis.h"
 #include "TGaxis.h"
+#include "TPaletteAxis.h"
 #include "TMath.h"
 #include "TSpectrum.h"
 #include "TString.h"
@@ -43,6 +46,11 @@ using namespace std;
 #include "TLegend.h"
 #include "TLine.h"
 #include "TPolyLine.h"
+#include "TCurlyLine.h"
+#include "TPolyLine3D.h"
+#include "TArrow.h"
+#include "TEllipse.h"
+#include "TArc.h"
 #include "TBox.h"
 #include "TPave.h"
 #include "TPaveStats.h"
@@ -102,7 +110,13 @@ void Setting::Setting_Gene( int BatchFlag ){
 	double green[NRGBs] = { 0.00, 0.81, 1.00, 0.20, 0.00 };
 	double blue[NRGBs]  = { 0.51, 1.00, 0.12, 0.00, 0.00 };
 	TColor::CreateGradientColorTable(NRGBs, stops, red, green, blue, NCont);
-	gStyle -> SetNumberContours(255);
+	gStyle -> SetNumberContours(NCont);
+
+	float const mycol[4][3] = { { .900, .975, 1.   },
+                                { 1.  , .950, .985 },
+                                { .925, 1.  , .950 },
+                                { 1.  , 1.  , .925 } };
+	for(int i=0; i<4; i++){gROOT->GetColor(11+i)->SetRGB( mycol[i][0], mycol[i][1], mycol[i][2]);}
 }
 //---------------------------------------------------------------------------------//
 void Setting::Setting_Hist1D( TH1D *hist, TString HTitle, TString XTitle, TString YTitle, int LCol, int LSty, int Font, int FCol, int FSty ){
@@ -254,6 +268,102 @@ void Setting::Setting_GError( TGraphAsymmErrors *gr, TString GTitle, TString XTi
 	gr->SetMarkerSize(MSiz);
 }
 //---------------------------------------------------------------------------------//
+void Setting::Setting_G2D( TGraph2D *gr, TString GTitle, TString XTitle, TString YTitle, TString ZTitle, int Npx, int Npy, int LCol, int LSty, int Font, int MCol, int MSty, double MSiz, double Min ){
+	gr->SetTitle(GTitle);
+	gr->SetName(GTitle);
+
+	gr->SetLineColor(LCol);
+	gr->SetLineStyle(LSty);
+	gr->SetLineWidth(1);
+	gr->SetMarkerStyle(MSty);
+	gr->SetMarkerColor(MCol);
+	gr->SetMarkerSize(MSiz);
+
+	if(Npx>0){
+		gr->SetNpx(Npx);
+	}else;
+	if(Npy>0){
+		gr->SetNpy(Npy);
+	}else;
+
+	gr->SetMinimum(Min);
+
+	gr->GetXaxis()->SetTitle(XTitle);
+	gr->GetXaxis()->CenterTitle();
+	gr->GetXaxis()->SetTitleFont(Font);
+	gr->GetXaxis()->SetTitleOffset(0.80);
+	gr->GetXaxis()->SetTitleSize(0.05);
+	gr->GetXaxis()->SetLabelFont(42);
+	gr->GetXaxis()->SetLabelSize(0.030);
+	gr->GetXaxis()->SetLabelOffset(0.01);
+
+	gr->GetYaxis()->SetTitle(YTitle);
+	gr->GetYaxis()->CenterTitle();
+	gr->GetYaxis()->SetTitleFont(Font);
+	gr->GetYaxis()->SetTitleOffset(0.80);
+	gr->GetYaxis()->SetTitleSize(0.05);
+	gr->GetYaxis()->SetLabelFont(42);
+	gr->GetYaxis()->SetLabelSize(0.030);
+	gr->GetYaxis()->SetLabelOffset(0.01);
+	((TGaxis*)gr->GetYaxis())->SetMaxDigits(6);
+
+	gr->GetZaxis()->SetTitle(ZTitle);
+	gr->GetZaxis()->SetTitleFont(Font);
+	gr->GetZaxis()->CenterTitle();
+	gr->GetZaxis()->SetTitleSize(0.05);
+	gr->GetZaxis()->SetLabelFont(42);
+	gr->GetZaxis()->SetLabelSize(0.030);
+	gr->GetZaxis()->SetLabelOffset(0.01);
+}
+//---------------------------------------------------------------------------------//
+void Setting::Setting_G2D( TGraph2DErrors *gr, TString GTitle, TString XTitle, TString YTitle, TString ZTitle, int Npx, int Npy, int LCol, int LSty, int Font, int MCol, int MSty, double MSiz, double Min ){
+	gr->SetTitle(GTitle);
+	gr->SetName(GTitle);
+
+	gr->SetLineColor(LCol);
+	gr->SetLineStyle(LSty);
+	gr->SetLineWidth(1);
+	gr->SetMarkerStyle(MSty);
+	gr->SetMarkerColor(MCol);
+	gr->SetMarkerSize(MSiz);
+
+	if(Npx>0){
+		gr->SetNpx(Npx);
+	}else;
+	if(Npy>0){
+		gr->SetNpy(Npy);
+	}else;
+
+	gr->SetMinimum(Min);
+
+	gr->GetXaxis()->SetTitle(XTitle);
+	gr->GetXaxis()->CenterTitle();
+	gr->GetXaxis()->SetTitleFont(Font);
+	gr->GetXaxis()->SetTitleOffset(0.80);
+	gr->GetXaxis()->SetTitleSize(0.05);
+	gr->GetXaxis()->SetLabelFont(42);
+	gr->GetXaxis()->SetLabelSize(0.030);
+	gr->GetXaxis()->SetLabelOffset(0.01);
+
+	gr->GetYaxis()->SetTitle(YTitle);
+	gr->GetYaxis()->CenterTitle();
+	gr->GetYaxis()->SetTitleFont(Font);
+	gr->GetYaxis()->SetTitleOffset(0.80);
+	gr->GetYaxis()->SetTitleSize(0.05);
+	gr->GetYaxis()->SetLabelFont(42);
+	gr->GetYaxis()->SetLabelSize(0.030);
+	gr->GetYaxis()->SetLabelOffset(0.01);
+	((TGaxis*)gr->GetYaxis())->SetMaxDigits(6);
+
+	gr->GetZaxis()->SetTitle(ZTitle);
+	gr->GetZaxis()->SetTitleFont(Font);
+	gr->GetZaxis()->CenterTitle();
+	gr->GetZaxis()->SetTitleSize(0.05);
+	gr->GetZaxis()->SetLabelFont(42);
+	gr->GetZaxis()->SetLabelSize(0.030);
+	gr->GetZaxis()->SetLabelOffset(0.01);
+}
+//---------------------------------------------------------------------------------//
 void Setting::Setting_Func( TF1 *func, int LCol, int LSty ){
 	func->SetLineColor(LCol);
 	func->SetLineStyle(LSty);
@@ -294,6 +404,20 @@ void Setting::Setting_Line( TPolyLine *Poll, int LCol, int LWid, int LSty, int F
 
 }
 //---------------------------------------------------------------------------------//
+void Setting::Setting_Line( TCurlyLine *lin, int LCol, int Wid, int Sty, double CulAmp, double CulWL ){
+	lin->SetLineColor(LCol);
+	lin->SetLineWidth(Wid);
+	lin->SetLineStyle(Sty);
+	lin->SetAmplitude(CulAmp);
+	lin->SetWaveLength(CulWL);
+}
+//---------------------------------------------------------------------------------//
+void Setting::Setting_Line( TPolyLine3D *lin, int LCol, int Wid, int Sty ){
+	lin->SetLineColor(LCol);
+	lin->SetLineWidth(Wid);
+	lin->SetLineStyle(Sty);
+}
+//---------------------------------------------------------------------------------//
 void Setting::Setting_Box( TBox* box, int LCol, int Wid, int Sty, int FCol, int FSty ){
 	//Line attribute
 	box->SetLineColor(LCol);
@@ -304,4 +428,18 @@ void Setting::Setting_Box( TBox* box, int LCol, int Wid, int Sty, int FCol, int 
 	box->SetFillColor(FCol);
 	box->SetFillStyle(FSty);
 }
+//---------------------------------------------------------------------------------//
+void Setting::Setting_Pave( TPaveText* Pt, int Font, int TCol, int TAli, double TSize, int LCol, int LWid, int LSty, int FCol, int FSty, int BSize ){
+	Pt->SetTextFont(Font);
+	Pt->SetTextColor(TCol);
+	Pt->SetTextAlign(TAli);
+	Pt->SetTextSize(TSize);
+	Pt->SetLineColor(LCol);
+	Pt->SetLineWidth(LWid);
+	Pt->SetLineStyle(LSty);
+	Pt->SetFillColor(FCol);
+	Pt->SetFillStyle(FSty);
+	Pt->SetBorderSize(BSize);
+}
+//---------------------------------------------------------------------------------//
 

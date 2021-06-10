@@ -38,8 +38,11 @@ using namespace std;
 #include "TGraph.h"
 #include "TGraphErrors.h"
 #include "TGraphAsymmErrors.h"
+#include "TGraph2D.h"
+#include "TGraph2DErrors.h"
 #include "TAxis.h"
 #include "TGaxis.h"
+#include "TPaletteAxis.h"
 #include "TMath.h"
 #include "TSpectrum.h"
 #include "TString.h"
@@ -47,6 +50,11 @@ using namespace std;
 #include "TLegend.h"
 #include "TLine.h"
 #include "TPolyLine.h"
+#include "TCurlyLine.h"
+#include "TPolyLine3D.h"
+#include "TArrow.h"
+#include "TEllipse.h"
+#include "TArc.h"
 #include "TBox.h"
 #include "TPave.h"
 #include "TPaveStats.h"
@@ -68,7 +76,7 @@ class Setting
 			int LSty=1, 
 			int Font=42, 
 			int FCol=422, 
-			int FSty=1001 
+			int FSty=3004 
 		);
 
 		void Setting_Hist2D( 
@@ -120,15 +128,53 @@ class Setting
 			double MSiz=2. 
 		);
 
+		void Setting_G2D(
+			TGraph2D* gr,
+			TString GTitle="",
+			TString XTitle="",
+			TString YTitle="",
+			TString ZTitle="",
+			int Npx=-1,
+			int Npy=-1,
+			int LCol=602,
+			int LSty=1,
+			int Font=62,
+			int MCol=6,
+			int MSty=29,
+			double MSiz=2.,
+			double Min=0.
+		);
+
+		void Setting_G2D(
+			TGraph2DErrors* gr,
+			TString GTitle="",
+			TString XTitle="",
+			TString YTitle="",
+			TString ZTitle="",
+			int Npx=-1,
+			int Npy=-1,
+			int LCol=602,
+			int LSty=1,
+			int Font=62,
+			int MCol=6,
+			int MSty=29,
+			double MSiz=2.,
+			double Min=0.
+		);
+
 		void Setting_Func  ( TF1 *func , int LCol=4, int LSty=1 );
 
 		void Setting_Legend( TLegend *leg, int Font=42, int Al=22, int Col=602, double Size=.05 );
 		void Setting_Latex ( TLatex *lat , int Font=42, int Al=22, int Col=602, double Size=.05 );
 
-		void Setting_Line  ( TLine *lin     , int LCol=602, int LWid=1, int LSty=1 );
-		void Setting_Line  ( TPolyLine *Poll, int LCol=602, int LWid=1, int LSty=1, int FCol=0, int FSty=0 );
+		void Setting_Line ( TLine *lin      , int LCol=602, int LWid=1, int LSty=1 );
+		void Setting_Line ( TPolyLine *Poll , int LCol=602, int LWid=1, int LSty=1, int FCol=0, int FSty=0 );
+		void Setting_Line ( TCurlyLine *lin , int LCol=602, int LWid=1, int LSty=1, double CulAmp=0.0125, double CulWL=0.01 );
+		void Setting_Line ( TPolyLine3D *lin, int LCol=602, int LWid=1, int LSty=1 );
+		void Setting_Arrow( TArrow *arr     , int LCol=602, int LWid=1, int LSty=1 );
+		void Setting_Arc  ( TArc *arc       , int LCol=602, int LWid=1, int LSty=1, int FCol=0, int FSty=0 );
+
 		void Setting_Box   ( TBox *box, int LCol=602, int Wid=1, int Sty=1, int FCol=0, int FSty=0 );
 		void Setting_Pave  ( TPave *pave    , int LCol, int LWid, int LSty, int FCol );
 };
-
 #endif
