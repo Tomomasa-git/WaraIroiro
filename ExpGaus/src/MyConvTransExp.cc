@@ -92,6 +92,7 @@ int main( int argc, char** argv ){
 	TStopwatch *Stw;
 
 	//Exp
+//	double par0= 1.;
 	double par0= 1.;
 	double par1=-1.;
 	double par2= 0.;
