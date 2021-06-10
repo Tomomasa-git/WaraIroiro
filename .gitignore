@@ -46,7 +46,7 @@
 # Root file
 *.root
 
-# binary
+# binary and others
 /ExpGaus/bin/
 /ExpGaus/lib/
 /ExpGaus/fig/
