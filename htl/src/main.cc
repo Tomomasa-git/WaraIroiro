@@ -54,9 +54,9 @@ using namespace std;
 
 
 int main( int argc, char** argv){
-	const int NofData  = 11;
+	const int NofData  = 12;
 	const int NofDummy = 5;
-	int ItNum = 3;
+	int ItNum = 4;
 
 	TApplication *theApp;
 
@@ -78,13 +78,17 @@ int main( int argc, char** argv){
 
 	double HMin = 0.;
 	double HMax = 500.;
-	double WMin = -0.25;
-	double WMax = 13.5;
+//	double WMin = -0.25;
+	double WMin = -0.40;
+//	double WMax = 13.5;
+	double WMax = 16.5;
 
 	double LT_Free=263.2;
 	double LT_Val[3];
-	int LCol[3] = { 602, 6, 870 };
-	int LSty[3] = { 7  , 5, 5   };
+//	int LCol[3] = { 602, 6, 870 };
+	int LCol[3] = { 602, 870, 6 };
+//	int LSty[3] = { 7  , 5, 5   };
+	int LSty[3] = { 7  , 5, 8   };
 
 	int DummyMCol[NofDummy] = { 4 , 3 , 2 , 2 , 2  };
 	int DummyMSty[NofDummy] = { 23, 20, 29, 33, 34 };
@@ -108,24 +112,28 @@ int main( int argc, char** argv){
 	gStyle->SetPadTickY(1);
 
 //	Ca = new TCanvas( "Ca", "Ca", 1200, 680 );
-	Ca = new TCanvas( "Ca", "Ca", 1202, 744 );
+//	Ca = new TCanvas( "Ca", "Ca", 1202, 744 );
+	Ca = new TCanvas( "Ca", "Ca", 1602, 824 );
 	Ca -> SetMargin( .100, .020, .040, .020 );
 	//Left, Right, Bottom, Top
 
 	Leg = new TLegend( .665, .690, .990, .990 );
-	Set -> Setting_Legend( Leg, 42, 12, 1, .0225 );
+//	Set -> Setting_Legend( Leg, 42, 12, 1, .0225 );
+	Set -> Setting_Legend( Leg, 42, 12, 1, .025 );
 //	Leg -> SetFillColor(kYellow-10);
 	Leg -> SetFillColor(14);
+	Leg -> SetBorderSize(2);
 
 	h_frame = new TH1D( "h_frame", "h_frame", 1, WMin, WMax );
 	h_frame -> GetXaxis()->SetNdivisions(1);
 	h_frame -> GetYaxis()->SetNdivisions(515);
 	h_frame -> GetYaxis()->SetTitle("Lifetime of ^{3}_{#Lambda}H (ps)");
-	h_frame -> GetYaxis()->SetTitleSize(.055);
-	h_frame -> GetYaxis()->SetTitleOffset(.75);
+	h_frame -> GetYaxis()->SetTitleSize(.080);
+	h_frame -> GetYaxis()->SetTitleOffset(.60);
 	h_frame -> GetYaxis()->SetTitleFont(42);
 	h_frame -> GetYaxis()->SetRangeUser(HMin, HMax);
 	h_frame -> GetXaxis()->SetLabelSize(0.);
+	h_frame -> GetYaxis()->SetLabelSize(0.045);
 	h_frame -> GetYaxis()->SetLabelFont(42);
 	h_frame -> SetTitle("");
 	h_frame -> SetStats(kFALSE);
