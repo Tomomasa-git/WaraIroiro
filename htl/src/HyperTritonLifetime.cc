@@ -67,7 +67,7 @@ HyperTritonLifetime::HyperTritonLifetime(int ID){
 	Pt -> SetTextColor(1);
 	Pt -> SetTextFont(42);
 //	Pt -> SetTextSize(.0325);
-	Pt -> SetTextSize(.0360);
+	Pt -> SetTextSize(.0400);
 	Pt -> SetBorderSize(0);
 
 	DataID = ID;
@@ -79,12 +79,14 @@ HyperTritonLifetime::~HyperTritonLifetime(){
 
 
 void HyperTritonLifetime::LTDraw(){
-	if(DataType==2)gr_lt->SetMarkerSize(2.3);
+	if(DataType==2)gr_lt->SetMarkerSize(2.5);
 	if(
 		   DataID==6
 		|| DataID==9
 	){
-		gr_lt->SetMarkerSize(2.5);
+		gr_lt->SetMarkerSize(3.50);
+	}else if( DataID==7 ){
+		gr_lt->SetMarkerSize(3.00);
 	}else;
 	gr_lt->Draw("samePL");
 	if(DataType==2){
@@ -110,13 +112,14 @@ void HyperTritonLifetime::LTDraw(){
 	if( DataID==6 )RefPos[1] = Lifetime_Val+(Lifetime_StatErr[1]+30.);
 	if( DataID==8 )RefPos[1] = Lifetime_Val+(Lifetime_StatErr[1]+60.);
 	if( DataID==10)RefPos[1] = Lifetime_Val+(Lifetime_StatErr[1]+30.);
+	if( DataID==11)RefPos[1] = Lifetime_Val-(Lifetime_StatErr[0]+60.);
 
 	Pt -> SetX1(RefPos[0]-0.4);
 	Pt -> SetX2(RefPos[0]+0.4);
 	Pt -> SetY1(RefPos[1]-30.);
 	Pt -> SetY2(RefPos[1]+30.);
 	if(DataType==2){
-		Pt -> SetY2(RefPos[1]+30.);
+		Pt -> SetY2(RefPos[1]+40.);
 //		Pt -> SetTextSize(.02);
 	}else;
 	Pt -> Draw();
@@ -212,7 +215,7 @@ int HyperTritonLifetime::SetMSty(int ID, int Type){
 			ret=29;
 		}else if(ID==7){				//HypHI
 			ret=33;
-		}else if( (ID==8)||(ID==10) ){	//ALICE
+		}else if( (ID==8)||(ID==10)||(ID==11) ){	//ALICE
 			ret=34;
 		}else ret=20;
 	}
@@ -256,7 +259,8 @@ void HyperTritonLifetime::SetDataPointFromDT(){
 	}
 
 	if(DataType==2){
-		Xpos = (double)DataID+2.;
+	//	Xpos = (double)DataID+2.;
+		Xpos = (double)DataID+2. + 0.30*( (double)DataID-5.);
 	}else{
 		Xpos = (double)DataID+1.;
 	}
@@ -271,7 +275,7 @@ void HyperTritonLifetime::SetDataPointFromDT(){
 	gr_lt -> SetPointError( 0, 0., 0., Lifetime_StatErr[0], Lifetime_StatErr[1] );
 	Col=SetMCol(DataType);
 	Sty=SetMSty(DataID, DataType);
-	Set -> Setting_GError( gr_lt, "", "", "", Col, 1, 42, Col, Sty, 2.00 );
+	Set -> Setting_GError( gr_lt, "", "", "", Col, 1, 42, Col, Sty, 2.50 );
 	gr_lt -> SetLineWidth(1);
 
 	SystErr -> SetX1(BoxEdgePos[0]);
