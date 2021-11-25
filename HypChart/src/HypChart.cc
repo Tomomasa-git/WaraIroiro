@@ -88,6 +88,7 @@ class LamHyp{
 		void SetHypName(string str){ HypName=str; }
 		void SetNameTable();
 		void GetNuclNameFromNT();
+		double GetBoxGPos(int i=0);
 		void HypDraw();
 		
 	private:
@@ -255,7 +256,7 @@ LamHyp::LamHyp(string Name, int Mass, int NP, int NN, int Kpi, int piK, int eeK,
 		BoxGPos[0] = (double)N-95.5;
 		BoxGPos[1] = (double)Z-13.-57.0;
 	}else if( A==777 ){
-		BoxGPos[0] = ExamplePos_X;
+		BoxGPos[0] = ExamplePos_X-0.30;
 		BoxGPos[1] = ExamplePos_Y;
 	}else{
 		BoxGPos[0] = (double)N;
@@ -303,9 +304,9 @@ LamHyp::LamHyp(string Name, int Mass, int NP, int NN, int Kpi, int piK, int eeK,
 //	HypBox -> SetBorderSize(1);
 
 	HypSymbol = new TLatex();
-	Set -> Setting_Latex( HypSymbol, 42, 22, 1, 0.0300 );
+	Set -> Setting_Latex( HypSymbol, 42, 22, 1, 0.0360 );
 	if( A==777 ){
-		HypSymbol->SetTextSize(0.060);
+		HypSymbol->SetTextSize(0.070);
 	}else;
 
 	for(int i=0; i<NofReactionType; i++){
@@ -371,10 +372,24 @@ void LamHyp::GetNuclNameFromNT(){
 }
 
 /*--------------------------------------------------------------------------------------------------------*/
+double LamHyp::GetBoxGPos(int i){
+	int num=0;
+	double val;
+
+	if(i<0)      num=0;
+	else if(i>=2)num=0;
+
+	num=i;
+	val = BoxGPos[num];
+
+	return val;	
+}// LamHyp::GetBoxGPos
+
+/*--------------------------------------------------------------------------------------------------------*/
 void LamHyp::HypDraw(){
 	HypBox->Draw();
 
-	HypSymbol -> DrawLatex( BoxGPos[0], BoxGPos[1], HypName.c_str() );
+	HypSymbol -> DrawLatex( BoxGPos[0]-0.08, BoxGPos[1], HypName.c_str() );
 
 	for(int i=0; i<NofReactionType; i++){
 		if(ReactFlag[i]==1){
@@ -535,23 +550,30 @@ int main( int argc, char** argv){
 
 	HypExample = new LamHyp("", 777, 0, 0, 1, 1, 1, 1, 1, 1 );
 	HypExample -> HypDraw();
-	Ln_ind[0] = new TLine( ExamplePos_X-1.0 , ExamplePos_Y-1.0  , ExamplePos_X-1.5 , ExamplePos_Y-1.5  );
-	Ln_ind[1] = new TLine( ExamplePos_X-1.0 , ExamplePos_Y+1.0  , ExamplePos_X-1.5 , ExamplePos_Y+1.5  );
-	Ln_ind[2] = new TLine( ExamplePos_X+1.0 , ExamplePos_Y+1.0  , ExamplePos_X+1.5 , ExamplePos_Y+1.5  );
-	Ln_ind[3] = new TLine( ExamplePos_X+1.0 , ExamplePos_Y-1.0  , ExamplePos_X+1.5 , ExamplePos_Y-1.5  );
-	Ln_ind[4] = new TLine( ExamplePos_X-0.83, ExamplePos_Y-0.925, ExamplePos_X-0.83, ExamplePos_Y-2.25 );
+	double expos[2];
+	for(int i=0; i<2; i++){expos[i] = HypExample->GetBoxGPos(i);}
+//	Ln_ind[0] = new TLine( ExamplePos_X-1.0 , ExamplePos_Y-1.0  , ExamplePos_X-1.5 , ExamplePos_Y-1.5  );
+//	Ln_ind[1] = new TLine( ExamplePos_X-1.0 , ExamplePos_Y+1.0  , ExamplePos_X-1.5 , ExamplePos_Y+1.5  );
+//	Ln_ind[2] = new TLine( ExamplePos_X+1.0 , ExamplePos_Y+1.0  , ExamplePos_X+1.5 , ExamplePos_Y+1.5  );
+//	Ln_ind[3] = new TLine( ExamplePos_X+1.0 , ExamplePos_Y-1.0  , ExamplePos_X+1.5 , ExamplePos_Y-1.5  );
+//	Ln_ind[4] = new TLine( ExamplePos_X-0.83, ExamplePos_Y-0.925, ExamplePos_X-0.83, ExamplePos_Y-2.25 );
+	Ln_ind[0] = new TLine( expos[0]-1.0 , expos[1]-1.0  , expos[0]-1.5 , expos[1]-1.5  );
+	Ln_ind[1] = new TLine( expos[0]-1.0 , expos[1]+1.0  , expos[0]-1.5 , expos[1]+1.5  );
+	Ln_ind[2] = new TLine( expos[0]+1.0 , expos[1]+1.0  , expos[0]+1.5 , expos[1]+1.5  );
+	Ln_ind[3] = new TLine( expos[0]+1.0 , expos[1]-1.0  , expos[0]+1.5 , expos[1]-1.5  );
+	Ln_ind[4] = new TLine( expos[0]-0.83, expos[1]-0.925, expos[0]-0.83, expos[1]-2.25 );
 	for(int i=0; i<5; i++){Ln_ind[i] -> Draw();}
 	Lat_ind = new TLatex();
 	Lat_ind -> SetTextAlign(22);
 	Lat_ind -> SetTextFont(42);
 	Lat_ind -> SetTextSize(.040);
-	Lat_ind -> DrawLatex( ExamplePos_X, ExamplePos_Y+2.50, "Studied by");
+	Lat_ind -> DrawLatex( expos[0], expos[1]+2.50, "Studied by");
 	Lat_ind -> SetTextSize(.030);
-	Lat_ind -> DrawLatex( ExamplePos_X-1.75, ExamplePos_Y-1.75, "(#it{K^{-}}, #pi^{-})");
-	Lat_ind -> DrawLatex( ExamplePos_X-1.75, ExamplePos_Y+1.75, "(#pi^{+}, #it{K^{+}})");
-	Lat_ind -> DrawLatex( ExamplePos_X+1.75, ExamplePos_Y+1.75, "(#it{e}, #it{e'K^{+}})");
-	Lat_ind -> DrawLatex( ExamplePos_X+1.75, ExamplePos_Y-1.75, "Emulsion");
-	Lat_ind -> DrawLatex( ExamplePos_X-0.83, ExamplePos_Y-2.50, "#gamma-ray spectroscopy");
+	Lat_ind -> DrawLatex( expos[0]-1.75, expos[1]-1.75, "(#it{K^{-}}, #pi^{-})");
+	Lat_ind -> DrawLatex( expos[0]-1.75, expos[1]+1.75, "(#pi^{+}, #it{K^{+}})");
+	Lat_ind -> DrawLatex( expos[0]+1.75, expos[1]+1.75, "(#it{e}, #it{e'K^{+}})");
+	Lat_ind -> DrawLatex( expos[0]+1.75, expos[1]-1.75, "Emulsion");
+	Lat_ind -> DrawLatex( expos[0]-0.83, expos[1]-2.50, "#gamma-ray spectroscopy");
 
 	Lambda = new LamHyp( "#Lambda", 1, 0, 0, 0, 0, 0, 0, 1, 0 );
 	Lambda -> HypDraw();
@@ -587,7 +609,7 @@ int main( int argc, char** argv){
 	Lat_tit -> DrawLatexNDC( .350, .900, "(Only single #Lambda and light mass region)");
 	
 
-	Ca->Print("../fig/test_05.pdf", "pdf");	
+	Ca->Print("../fig/test_06.pdf", "pdf");	
 
 	//Test for name table
 //	ifstream ifs( "../dat/NameTable00.dat", ios_base::in );
@@ -603,3 +625,12 @@ int main( int argc, char** argv){
 	theApp->Run();
 	return 0;
 }
+
+/*
+ * 2021. 11. 25 (Thu.)
+ * From Hypernuclear data base
+ *   6HLambda:
+ *     Nuclear Physics A 881 (2012) 269–287
+ *     Phys. Rev. C 96, 014005 (2017)
+ *
+ * */

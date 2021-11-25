@@ -63,9 +63,9 @@ using namespace std;
 class Setting
 {
 	public:
-		Setting();
+		 Setting();
 		~Setting();
-		void Setting_Gene  ( int BatchFlag=1 );
+		void Setting_Gene( int BatchFlag=1 );
 
 		void Setting_Hist1D( 
 			TH1D *hist, 
@@ -174,7 +174,8 @@ class Setting
 		void Setting_Arrow( TArrow *arr     , int LCol=602, int LWid=1, int LSty=1 );
 		void Setting_Arc  ( TArc *arc       , int LCol=602, int LWid=1, int LSty=1, int FCol=0, int FSty=0 );
 
-		void Setting_Box   ( TBox *box, int LCol=602, int Wid=1, int Sty=1, int FCol=0, int FSty=0 );
-		void Setting_Pave  ( TPave *pave    , int LCol, int LWid, int LSty, int FCol );
+		void Setting_Box   ( TBox *box    , int LCol=602, int Wid=1, int Sty=1, int FCol=0, int FSty=0 );
+		void Setting_Pave  ( TPave *pave  , int Font=42, int TCol=602, int TAli=22, double TSize=0.05, int LCol=602, int LWid=1, int LSty=1, int FCol=0, int FSty=0, int BSize=3  );
+		void Setting_Pave  ( TPaveText *Pt, int Font=42, int TCol=602, int TAli=22, double TSize=0.05, int LCol=602, int LWid=1, int LSty=1, int FCol=0, int FSty=0, int BSize=3  );
 };
 #endif

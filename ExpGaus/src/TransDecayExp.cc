@@ -73,7 +73,7 @@ TString DrawOption(int Num=0, int Type=0);
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 int main( int argc, char** argv ){
-	int ItNum=2;
+	int ItNum=3;
 	int const NofCanv = 3;
 	int const NofGr   = 6;
 	int NofGr_Draw[NofCanv] = {1, NofGr, NofGr};
@@ -88,7 +88,8 @@ int main( int argc, char** argv ){
 	TFile *ifp;
 	TStopwatch *Stw;
 	
-	double par00=1.;
+//	double par00=1.;
+	double par00[NofGr]={4.00,2.60,1.75,1.00,1.00,1.00};
 	double par01=-0.10;
 	double par02=0.;
 	double par03=0.;
@@ -96,6 +97,7 @@ int main( int argc, char** argv ){
 	double par11[NofGr]={-0.10, -0.20, -0.50, -1.00, -2.00, -5.00};
 	double par12=0.;
 	double par13=0.;
+	double OptimumPos[NofGr];
 	
 	double param[NofGr][8];
 	
@@ -129,7 +131,9 @@ int main( int argc, char** argv ){
 	Stw->Start();
 
 	for(int i=0; i<NofGr; i++){
-		param[i][0]=par00;
+		par00[i] = 1./( (par11[i]/(par01+par11[i]))*pow( (par01/(par11[i]+par01)),par01/par11[i]) );
+
+		param[i][0]=par00[i];
 		param[i][1]=par01;
 		param[i][2]=par02;
 		param[i][3]=par03;
@@ -137,6 +141,9 @@ int main( int argc, char** argv ){
 		param[i][5]=par11[i];
 		param[i][6]=par12;
 		param[i][7]=par13;
+
+		OptimumPos[i] = (-1.*param[i][1])*log( param[i][1]/(param[i][1]+param[i][5]) );
+		cout<<OptimumPos[i]<<" "<<par00[i]<<endl;
 	}
 
 	for(int i=0; i<NofCanv; i++)Ca[i] = new TCanvas(Form("Ca[%d]",i),Form("Ca[%d]",i),1282,744);
@@ -162,7 +169,7 @@ int main( int argc, char** argv ){
 		f[0][i] = new TF1(Form("f[0][%d]",i),TransExp,-2.,10.,4);
 		MySetting->Setting_Func(f[0][i],lcol,lsty[i]);
 		f[0][i]->SetNpx(Npx);
-		f[0][i]->SetParameters(par00,par01,par02,par03);
+		f[0][i]->SetParameters(par00[i],par01,par02,par03);
 
 		g[0][i] = new TGraph(f[0][i]);
 		MySetting->Setting_Graph(g[0][i],"","x","f(x)",lcol,lsty[i]);
@@ -171,7 +178,7 @@ int main( int argc, char** argv ){
 		g[0][i]->GetYaxis()->SetRangeUser(0.,1.1);
 		g[0][i]->SetLineWidth(2);
 
-		LegEntry = Form("#color[%d]{#it{p_{1}}=%.3lf}", lcol,par01);
+		LegEntry = Form("#color[%d]{#it{p_{0}}=%.3lf, #it{p_{1}}=%.3lf}", lcol,par00[i],par01);
 		if(i==0)Leg[0]->AddEntry(g[0][i], LegEntry, "l");
 
 		f[1][i] = new TF1(Form("f[1][%d]",i),DecayExp,-2.,10.,4);

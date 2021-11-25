@@ -76,10 +76,10 @@ TString DrawOption(int Num=0, int Type=0);
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 int main( int argc, char** argv ){
-	int ItNum=1;
+	int ItNum=2;
 	int const NofCanv = 5;
 	int const NofHist = 5;
-	int const MaxItr=5E+6;
+	int const MaxItr=1E+7;
 
 	TApplication *theApp;
 	Setting *MySetting;
@@ -113,8 +113,8 @@ int main( int argc, char** argv ){
 	double delta;
 
 	//Hist Setting
-	double HistoRange[2]={-2., 10.};
-	int HistoNbin=600;
+	double HistoRange[2]={-2., 20.};
+	int HistoNbin=440;
 	double HistoDiv;
 	double HistoLCol;
 	double HistoFCol;
@@ -139,7 +139,7 @@ int main( int argc, char** argv ){
 	//////////////////
 	//Canvavs
 	for(int i=0; i<NofCanv; i++){
-		Ca[i] = new TCanvas( Form("Ca[%d]",i), Form("Ca[%d]",i), 1282,1944 );
+		Ca[i] = new TCanvas( Form("Ca[%d]",i), Form("Ca[%d]",i), 1282,1282 );
 		Ca[i]->Divide(1,2);
 	}
 
@@ -157,17 +157,19 @@ int main( int argc, char** argv ){
 			Leg[i][j]->SetBorderSize(0);
 		}
 
-		hRaw[i]  = new TH1D(Form("hRaw[%d]" ,i) ,Form("hRaw[%d]" ,i) , HistoNbin,-2.,10.);
-		hConv[i] = new TH1D(Form("hConv[%d]",i) ,Form("hConv[%d]",i) , HistoNbin,-2.,10.);
+		hRaw[i]  = new TH1D(Form("hRaw[%d]" ,i) ,Form("hRaw[%d]" ,i) , HistoNbin,-2.,20.);
+		hConv[i] = new TH1D(Form("hConv[%d]",i) ,Form("hConv[%d]",i) , HistoNbin,-2.,20.);
 
 		MySetting->Setting_Hist1D( hRaw[i],"","x",Form("Count/bin #scale[0.60]{(bin=%.3lf)}",HistoDiv),HistoLCol,1,62,HistoFCol,HistoFSty );
 		hRaw[i]->SetFillColorAlpha(HistoFCol,HistoFTransp);
+		hRaw[i]->GetXaxis()->SetLimits(-2.,10.);
 		hRaw[i]->GetXaxis()->SetNdivisions(12,2,5);
 		hRaw[i]->GetYaxis()->SetNoExponent();
 		Leg[i][0]->AddEntry(hRaw[i],Form("#tau=%.3lf", par1),"fl");
 
 		MySetting->Setting_Hist1D( hConv[i],"","x",Form("Count/bin #scale[0.60]{(bin=%.3lf)}",HistoDiv),HistoLCol,1,62,HistoFCol,HistoFSty );
 		hConv[i]->SetFillColorAlpha(HistoFCol,HistoFTransp);
+		hConv[i]->GetXaxis()->SetLimits(-2.,10.);
 		hConv[i]->GetXaxis()->SetNdivisions(12,2,5);
 		hConv[i]->GetYaxis()->SetNoExponent();
 		Leg[i][1]->AddEntry(hConv[i],Form("#tau=%.3lf, #sigma=%.3lf", par1,sigma[i]),"fl");
