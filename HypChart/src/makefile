@@ -12,8 +12,10 @@ ROOTGLIBS = $(shell root-config --glibs)
 CXXFLAGS = -Wall -O2 $(ROOTFLAGS) 
 CXXLIBS = $(ROOTLIBS)
 
-TARGET1=     HypChart   Setting
-OBJS1=       HypChart.o Setting.o
+#TARGET1=     HypChart   Setting
+#OBJS1=       HypChart.o Setting.o
+TARGET1=     HypChart_MThesis   Setting
+OBJS1=       HypChart_MThesis.o Setting.o
 
 all: $(TARGET1)
 
