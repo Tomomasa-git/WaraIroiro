@@ -58,6 +58,9 @@
 /HyperDiag/bin/
 /HyperDiag/lib/
 /HyperDiag/fig/
+/HyperDiag/src/bin/
+/HyperDiag/src/lib/
+/HyperDiag/src/fig/
 
 /htl/bin/
 /htl/lib/
