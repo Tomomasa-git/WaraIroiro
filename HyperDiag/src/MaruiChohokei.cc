@@ -54,7 +54,7 @@ using namespace std;
 #include "TPaveStats.h"
 #include "TPaveText.h"
 
-#include "./Setting.h"
+#include "./Setting.hh"
 #include "./MaruiChohokei.h"
 
 MaruiChohokei::MaruiChohokei( double gx, double gy, int N, int pid ){

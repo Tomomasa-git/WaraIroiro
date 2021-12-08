@@ -57,7 +57,7 @@ using namespace std;
 #include "TPaveStats.h"
 #include "TPaveText.h"
 
-#include "./Setting.h"
+#include "./Setting.hh"
 
 const int NofAngle = 4;
 
@@ -72,9 +72,6 @@ class MaruiChohokei
 		void Draw();
 		void DrawQuarks();
 		double  GetQPosX();
-		double  GetGPosX();
-		double  GetGPosY();
-		double* GetGPos();
 		double  GetQuarkPosX(int i=0);
 		double  GetQuarkPosY(int i=0);
 		TString GetParName(int i=999);
@@ -113,5 +110,10 @@ class MaruiChohokei
 		double CharPos[3][2];
 		TString Quark[3];
 		TString ParName;
+
+	public:
+		double  GetGPosX(){return gPos[0];}
+		double  GetGPosY(){return gPos[1];}
+		double* GetGPos() {return gPos;}
 };
 #endif

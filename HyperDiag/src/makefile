@@ -14,8 +14,10 @@ CXXLIBS = $(ROOTLIBS)
 
 #TARGET1  = BaryonOctet   Setting
 #OBJS1    = BaryonOctet.o Setting.o
-TARGET1  = BaryonDecaplet   Setting
-OBJS1    = BaryonDecaplet.o Setting.o
+#TARGET1  = BaryonDecaplet   Setting
+#OBJS1    = BaryonDecaplet.o Setting.o
+TARGET1 = HyperDiagrams   MaruiChohokei   Setting
+OBJS1   = HyperDiagrams.o MaruiChohokei.o Setting.o
 
 all: $(TARGET1)
 
