@@ -207,7 +207,8 @@ void MaruiChohokei::SetQuarks(){
 		Quark[0] = "#bar{#it{u}}";
 		Quark[1] = "#it{s}";
 		ParName  = "K^{-}";
-		LColor = 800;
+	//	LColor = 800;
+		LColor = 843;
 		break;
 		
 		//pi-

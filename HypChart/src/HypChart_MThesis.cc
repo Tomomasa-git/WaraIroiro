@@ -137,7 +137,8 @@ class LamHyp{
 		int BoxLWid   = 1;
 		int BoxFCol   = 0;
 
-		int AngCol[NofReactionType+1] = {3, 900, 4, 800, 18};	//Kpi, piK, eeK
+//		int AngCol[NofReactionType+1] = {3, 900, 4, 800, 18};	//Kpi, piK, eeK
+		int AngCol[NofReactionType+1] = {3, 900, 4, 870, 18};	//Kpi, piK, eeK
 		double GamlayPosX[2];
 		double GamlayPosY[2];
 
@@ -533,7 +534,11 @@ int main( int argc, char** argv){
 	TLine *Ln_ind[NofReactionType+2];
 	int NofLn_ind;
 
-	string pdfname = "../fig/test_07.pdf";
+//	string pdfname = "../fig/test_07.pdf";
+	int ItNum = 0;
+	string pdfpath = "../fig/";
+	string pdfname = Form("HypChart_MThesis_%03d.pdf",ItNum);
+	pdfname = pdfpath + pdfname;
 
 	theApp = new TApplication( "App", &argc, argv );
 
@@ -612,11 +617,6 @@ int main( int argc, char** argv){
 	HypExample -> HypDraw();
 	double expos[2];
 	for(int i=0; i<2; i++){expos[i] = HypExample->GetBoxGPos(i);}
-//	Ln_ind[0] = new TLine( ExamplePos_X-1.0 , ExamplePos_Y-1.0  , ExamplePos_X-1.5 , ExamplePos_Y-1.5  );
-//	Ln_ind[1] = new TLine( ExamplePos_X-1.0 , ExamplePos_Y+1.0  , ExamplePos_X-1.5 , ExamplePos_Y+1.5  );
-//	Ln_ind[2] = new TLine( ExamplePos_X+1.0 , ExamplePos_Y+1.0  , ExamplePos_X+1.5 , ExamplePos_Y+1.5  );
-//	Ln_ind[3] = new TLine( ExamplePos_X+1.0 , ExamplePos_Y-1.0  , ExamplePos_X+1.5 , ExamplePos_Y-1.5  );
-//	Ln_ind[4] = new TLine( ExamplePos_X-0.83, ExamplePos_Y-0.925, ExamplePos_X-0.83, ExamplePos_Y-2.25 );
 	Ln_ind[0] = new TLine( expos[0]-1.0 , expos[1]-1.0  , expos[0]-1.5 , expos[1]-1.5  );	// K-pi-
 	Ln_ind[1] = new TLine( expos[0]-1.0 , expos[1]+1.0  , expos[0]-1.5 , expos[1]+1.5  );	// pi+K+
 	Ln_ind[2] = new TLine( expos[0]+1.0 , expos[1]+1.0  , expos[0]+1.5 , expos[1]+1.5  );	// ee'K+
