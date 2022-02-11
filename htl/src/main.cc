@@ -6,11 +6,15 @@
  * * * * * * * * * * * */
 #include <stdio.h>
 #include <stdlib.h>
+#include <string>
 #include <iostream>
 #include <fstream>
 #include <sstream>
 #include <iomanip>
 #include <cmath>
+#include <vector>
+#include <dirent.h>
+#include <unistd.h>
 using namespace std;
 
 #include "TApplication.h"
@@ -52,11 +56,55 @@ using namespace std;
 
 #include "./Setting.h"
 
+////////////////////////////////////////////////////////////////////////////
+int SearchFile(string path, string file);
+void RedrawFrame(TFrame *frame);
+////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////
+int SearchFile(string path, string file){
+	const char *SearchPath = path.c_str();
+	string SearchTarget=file;
+	DIR *DirPtr;
+	dirent *Entry;
+
+	int id=0;
+
+	DirPtr = opendir(SearchPath);
+	if(DirPtr==NULL)exit(1);
+	do{
+		Entry = readdir(DirPtr);
+		if(Entry!=NULL){
+			if( (Entry->d_name)==SearchTarget )id++;
+		}
+			
+	}while(Entry!=NULL);
+
+	return id;
+}		
+
+////////////////////////////////////////////////////////////////////////////
+void RedrawFrame(TFrame *frame){
+	gPad->Update();
+	gPad->Modified(1);
+	
+	frame=gPad->GetFrame();
+	frame->SetFillStyle(0);
+	frame->Draw();
+
+	gPad->Update();
+	gPad->Modified(1);
+	
+	return;
+}//RedrawFrame
+
+///////////////////////
+
 
 int main( int argc, char** argv){
 	const int NofData  = 12;
 	const int NofDummy = 5;
-	int ItNum = 4;
+//	int ItNum = 4;
+	int ItNum = 0;
 
 	TApplication *theApp;
 
@@ -72,6 +120,7 @@ int main( int argc, char** argv){
 		//2: Gal, Garcilazo, Phys. Lett. B791 (2019) 48-53
 	TGraphErrors* gr_dummy[NofDummy];
 
+	string figpath="../fig/";
 	string figure;
 	string figure_op;
 	string figure_cl;
@@ -97,7 +146,13 @@ int main( int argc, char** argv){
 	LT_Val[1] = 256.;
 	LT_Val[2] = 213.;	//
 
-	figure = Form("../fig/HTL_Lifetime_%02d.pdf", ItNum);
+	figure = Form("HTL_Lifetime_mthesisslide_%02d.pdf", ItNum);
+	while( SearchFile(figpath,figure)!=0 ){
+		ItNum++; cout<<ItNum<<endl;
+		figure = Form("HTL_Lifetime_mthesisslide_%02d.pdf", ItNum);
+	}
+	figure = Form("HTL_Lifetime_mthesisslide_%02d.pdf", ItNum);
+	figure = figpath+figure;
 	figure_op = figure+"[";
 	figure_cl = figure+"]";
 
@@ -143,8 +198,9 @@ int main( int argc, char** argv){
 	for(int i=0; i<3; i++){
 		Ln[i] = new TLine( WMin, LT_Val[i], WMax, LT_Val[i]);
 		Set -> Setting_Line( Ln[i], LCol[i], 2, LSty[i] );
-		Ln[i] -> Draw();
+	//	Ln[i] -> Draw();
 	}
+	Ln[0] -> Draw();
 	Leg->AddEntry( Ln[0], "Free #Lambda (PDG Val.): 263.2 #pm 2.0 ps"      , "l" );
 	Leg->AddEntry( Ln[1], "H. Kamada #it{et. al.}, PRC #bf{57} (1998) 1595", "l" );
 	Leg->AddEntry( Ln[2], "A. Gal, H. Garcilazo, PLB #bf{791} (2019) 48-53", "l" );
@@ -177,7 +233,7 @@ int main( int argc, char** argv){
 	Fr -> SetLineWidth(1);
 	Fr -> Draw();
 	
-	Leg -> Draw();
+//	Leg -> Draw();
 
 	Ca->Print( figure_op.c_str(), "pdf");
 	Ca->Print( figure.c_str() );
