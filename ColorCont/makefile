@@ -12,11 +12,13 @@ ROOTGLIBS = $(shell root-config --glibs)
 CXXFLAGS = -Wall -O2 $(ROOTFLAGS) 
 CXXLIBS = $(ROOTLIBS)
 
-TARGET1  = CalcElossFunc 
-OBJS1    = CalcElossFunc.o 
+TARGET1  = DrawColorCont 
+OBJS1    = DrawColorCont.o 
+TARGET2  = DrawAll 
+OBJS2    = DrawAll.o 
 
-all: $(TARGET1) 
-#     $(TARGET2) 
+all: $(TARGET1) \
+     $(TARGET2) 
 #     $(TARGET3) 
 #     $(TARGET4) 
 #     $(TARGET5)  
@@ -33,10 +35,10 @@ $(LIBDIR)/%.o : %.cc
 
 $(TARGET1): $(patsubst %,$(LIBDIR)/%,$(OBJS1))
 	$(CXX) $(CFLAGS) -o $(BINDIR)/$@ $< $(CXXLIBS) $(CXXFLAGS)
-#
-##$(TARGET2): $(patsubst %,$(LIBDIR)/%,$(OBJS2))
-##	$(CXX) $(CFLAGS) -o $(BINDIR)/$@ $< $(CXXLIBS) $(CXXFLAGS)
-#####
+
+$(TARGET2): $(patsubst %,$(LIBDIR)/%,$(OBJS2))
+	$(CXX) $(CFLAGS) -o $(BINDIR)/$@ $< $(CXXLIBS) $(CXXFLAGS)
+####
 ##$(TARGET3): $(patsubst %,$(LIBDIR)/%,$(OBJS3))
 ##	$(CXX) $(CFLAGS) -o $(BINDIR)/$@ $< $(CXXLIBS) $(CXXFLAGS)
 #####

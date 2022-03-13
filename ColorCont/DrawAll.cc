@@ -1,6 +1,6 @@
 /* * * * * * * * * * * * * *
- *   DrawColorCont.cc      *
- *    2022. 02. 11 (Sat.)  *
+ *    DrawAll.cc           *
+ *    2022. 02. 23 (Wed.)  *
  *    T. FUJIWARA          *
  * * * * * * * * * * * * * */
 #include <iostream>
@@ -77,9 +77,9 @@ using namespace std;
 //#include "../include/Dict.cc"
 //#include "../include/Define.hh"
 
-static const int nECP = 63;
-static const int ncnv = 2;
-static const int nItr = 2.5E+8;
+static const int nECP = 64;
+static const int ncnv = 128;
+static const int nItr = 1E+7;
 
 //enum EColor { kWhite =0,   kBlack =1,   kGray=920,
 //              kRed   =632, kGreen =416, kBlue=600, kYellow=400, kMagenta=616, kCyan=432,
@@ -161,7 +161,7 @@ void SetTH2(TH2 *h2, TString hname, TString xname, TString yname){
   h2->GetXaxis()->CenterTitle();
   h2->GetYaxis()->SetTitle(yname);
   h2->GetYaxis()->CenterTitle();
-//  h2->SetMinimum(0.95);
+//  h2->SetMinimum(0.8);
   h2->SetLineWidth(0);
   h2->SetTitleSize(0.05,"");
   h2->GetXaxis()->SetTitleFont(62);
@@ -172,7 +172,7 @@ void SetTH2(TH2 *h2, TString hname, TString xname, TString yname){
   h2->GetYaxis()->SetTitleOffset(0.80);
   h2->GetXaxis()->SetLabelSize(0.060);
   h2->GetYaxis()->SetLabelSize(0.060);
-  h2->GetZaxis()->SetLabelSize(0.040);
+  h2->GetZaxis()->SetLabelSize(0.050);
 }
 ////////////////////////////////////////////////////////////////////////////
 void SetGraph(TGraph *gr, TString hname, TString xname, TString yname, int LColor, int LStyle, int LWidth, int MColor, int MStyle, double Yoffset, double min, double max){
@@ -225,7 +225,6 @@ void SetGrErr(TGraphErrors *gr, TString hname, TString xname, TString yname, int
 //  gr->GetYaxis()->SetRangeUser(min,max);
 }
 ////////////////////////////////////////////////////////////////////////////
-
 void SetTF1(TF1 *f, int LColor, int LWidth, int LStyle, int Npx){
   f->SetLineColor(LColor);
   f->SetLineWidth(LWidth);
@@ -342,101 +341,107 @@ double GetFWHM(TH1 *h){
 ////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////
 class MyDraw{
-public:
-   MyDraw(int ccontnnumber=0);
-  ~MyDraw();
-  void SetRoot();
-  void SetIO();
-  void DefineCanv();
-  void DefineObj();
-  void Fill();
-  void DrawHist();
-  void Export();
-
-private:
-  int ItNum=0;
-  bool fIsDebugFlag=kFALSE;
-  int fDebugModeLevel=0;
-
-  TCanvas *ca[ncnv];
-  TH2D *h_cont[ncnv][2];
-  double gaMean=0.;
-  double gaSigma=1.0;
-  double bwMean=0.;
-  double bwGamma=gaSigma*sigma_to_fwhm;
-
-  TFile *ofp;
-
-  string pdfpath="./pdf/";
-  string pdfname;    
-  string pdfname_[ncnv];    
-  string pdf_op;    
-  string pdf_cl;    
-  string rootpath="./output/";
-  string rootname;    
-  string txtpath="./txt/";
-  string tfname;
-
-  int pltcol[nECP] = {
-                       kDeepSea,                  kGreyScale,            kDarkBodyRadiator,  kBlueYellow,     kRainBow, 
-                       kInvertedDarkBodyRadiator, kBird,                 kCubehelix,         kGreenRedViolet, kBlueRedYellow,
-                       kOcean,                    kColorPrintableOnGrey, kAlpine,            kAquamarine,     kArmy,
-                       kAtlantic,                 kAurora,               kAvocado,           kBeach,          kBlackBody,
-                       kBlueGreenYellow,          kBrownCyan,            kCMYK,              kCandy,          kCherry,
-                       kCoffee,                   kDarkRainBow,          kDarkTerrain,       kFall,           kFruitPunch,
-                       kFuchsia,                  kGreyYellow,           kGreenBrownTerrain, kGreenPink,      kIsland,
-                       kLake,                     kLightTemperature,     kLightTerrain,      kMint,           kNeon,
-                       kPastel,                   kPearl,                kPigeon,            kPlum,           kRedBlue,
-                       kRose,                     kRust,                 kSandyTerrain,      kSienna,         kSolar,
-                       kSouthWest,                kStarryNight,          kSunset,            kTemperatureMap, kThermometer,
-                       kValentine,                kVisibleSpectrum,      kWaterMelon,        kCool,           kCopper,
-                       kGistEarth,                kViridis,              kCividis
-                     };
-
-
-  string pltcolname[nECP] = {
-                              "kDeepSea",                  "kGreyScale",            "kDarkBodyRadiator",  "kBlueYellow",     "kRainBow", 
-                              "kInvertedDarkBodyRadiator", "kBird",                 "kCubehelix",         "kGreenRedViolet", "kBlueRedYellow",
-                              "kOcean",                    "kColorPrintableOnGrey", "kAlpine",            "kAquamarine",     "kArmy",
-                              "kAtlantic",                 "kAurora",               "kAvocado",           "kBeach",          "kBlackBody",
-                              "kBlueGreenYellow",          "kBrownCyan",            "kCMYK",              "kCandy",          "kCherry",
-                              "kCoffee",                   "kDarkRainBow",          "kDarkTerrain",       "kFall",           "kFruitPunch",
-                              "kFuchsia",                  "kGreyYellow",           "kGreenBrownTerrain", "kGreenPink",      "kIsland",
-                              "kLake",                     "kLightTemperature",     "kLightTerrain",      "kMint",           "kNeon",
-                              "kPastel",                   "kPearl",                "kPigeon",            "kPlum",           "kRedBlue",
-                              "kRose",                     "kRust",                 "kSandyTerrain",      "kSienna",         "kSolar",
-                              "kSouthWest",                "kStarryNight",          "kSunset",            "kTemperatureMap", "kThermometer",
-                              "kValentine",                "kVisibleSpectrum",      "kWaterMelon",        "kCool",           "kCopper",
-                              "kGistEarth",                "kViridis",              "kCividis"
-                            };
-
-  //enum EColorPalette{
-  //                    kDeepSea=51,          kGreyScale=52,    kDarkBodyRadiator=53,
-  //                    kBlueYellow= 54,      kRainBow=55,      kInvertedDarkBodyRadiator=56,
-  //                    kBird=57,             kCubehelix=58,    kGreenRedViolet=59,
-  //                    kBlueRedYellow=60,    kOcean=61,        kColorPrintableOnGrey=62,
-  //                    kAlpine=63,           kAquamarine=64,   kArmy=65,
-  //                    kAtlantic=66,         kAurora=67,       kAvocado=68,         
-  //                    kBeach=69,            kBlackBody=70,    kBlueGreenYellow=71,
-  //                    kBrownCyan=72,        kCMYK=73,         kCandy=74,
-  //                    kCherry=75,           kCoffee=76,       kDarkRainBow=77,
-  //                    kDarkTerrain=78,      kFall=79,         kFruitPunch=80,
-  //                    kFuchsia=81,          kGreyYellow=82,   kGreenBrownTerrain=83,
-  //                    kGreenPink=84,        kIsland=85,       kLake=86,
-  //                    kLightTemperature=87, kLightTerrain=88, kMint=89,
-  //                    kNeon=90,             kPastel=91,       kPearl=92,
-  //                    kPigeon=93,           kPlum=94,         kRedBlue=95,
-  //                    kRose=96,             kRust=97,         kSandyTerrain=98,
-  //                    kSienna=99,           kSolar=100,       kSouthWest=101,
-  //                    kStarryNight=102,     kSunset=103,      kTemperatureMap=104,
-  //                    kThermometer=105,     kValentine=106,   kVisibleSpectrum=107,
-  //                    kWaterMelon=108,      kCool=109,        kCopper=110,
-  //                    kGistEarth=111,       kViridis=112,     kCividis=113
-  //};       
-
-
-
+   public:
+      MyDraw(int ccontnnumber=0);
+     ~MyDraw();
+     void SetRoot();
+     void SetIO();
+     void DefineCanv();
+     void DefineObj();
+     void Fill();
+     void DrawHist();
+     void Export();
+   
+   private:
+     int ItNum=0;
+     bool fIsDebugFlag=kFALSE;
+     int fDebugModeLevel=0;
+   
+     TCanvas *ca[ncnv];
+     TH2D *h_cont[nECP][2];
+     TFrame *fr_cont[nECP][2];
+     double gaMean=0.;
+     double gaSigma=2.0;
+     double bwMean=0.;
+     double bwGamma=3.0;
+   
+     TFile *ifp;
+     TFile *ofp;
+   
+     string pdfpath="./pdf/Separated/";
+     string pdfname;    
+     string pdfname_[ncnv];    
+     string pdf_op;    
+     string pdf_cl;    
+     string inputpath="./output/";
+     string inputname;    
+     string rootpath="./output/Separated/";
+     string rootname;    
+     string txtpath="./txt/";
+     string tfname;
+   
+     int pltcol[nECP] = {
+                          0,                         kDeepSea,                  kGreyScale,            kDarkBodyRadiator,  kBlueYellow,     kRainBow, 
+                          kInvertedDarkBodyRadiator, kBird,                 kCubehelix,         kGreenRedViolet, kBlueRedYellow,
+                          kOcean,                    kColorPrintableOnGrey, kAlpine,            kAquamarine,     kArmy,
+                          kAtlantic,                 kAurora,               kAvocado,           kBeach,          kBlackBody,
+                          kBlueGreenYellow,          kBrownCyan,            kCMYK,              kCandy,          kCherry,
+                          kCoffee,                   kDarkRainBow,          kDarkTerrain,       kFall,           kFruitPunch,
+                          kFuchsia,                  kGreyYellow,           kGreenBrownTerrain, kGreenPink,      kIsland,
+                          kLake,                     kLightTemperature,     kLightTerrain,      kMint,           kNeon,
+                          kPastel,                   kPearl,                kPigeon,            kPlum,           kRedBlue,
+                          kRose,                     kRust,                 kSandyTerrain,      kSienna,         kSolar,
+                          kSouthWest,                kStarryNight,          kSunset,            kTemperatureMap, kThermometer,
+                          kValentine,                kVisibleSpectrum,      kWaterMelon,        kCool,           kCopper,
+                          kGistEarth,                kViridis,              kCividis
+                        };
+   
+   
+     string pltcolname[nECP] = {
+                                 "kNagaoPalette",             "kDeepSea",              "kGreyScale",         "kDarkBodyRadiator",  "kBlueYellow",     "kRainBow", 
+                                 "kInvertedDarkBodyRadiator", "kBird",                 "kCubehelix",         "kGreenRedViolet",    "kBlueRedYellow",
+                                 "kOcean",                    "kColorPrintableOnGrey", "kAlpine",            "kAquamarine",        "kArmy",
+                                 "kAtlantic",                 "kAurora",               "kAvocado",           "kBeach",             "kBlackBody",
+                                 "kBlueGreenYellow",          "kBrownCyan",            "kCMYK",              "kCandy",             "kCherry",
+                                 "kCoffee",                   "kDarkRainBow",          "kDarkTerrain",       "kFall",              "kFruitPunch",
+                                 "kFuchsia",                  "kGreyYellow",           "kGreenBrownTerrain", "kGreenPink",         "kIsland",
+                                 "kLake",                     "kLightTemperature",     "kLightTerrain",      "kMint",              "kNeon",
+                                 "kPastel",                   "kPearl",                "kPigeon",            "kPlum",              "kRedBlue",
+                                 "kRose",                     "kRust",                 "kSandyTerrain",      "kSienna",            "kSolar",
+                                 "kSouthWest",                "kStarryNight",          "kSunset",            "kTemperatureMap",    "kThermometer",
+                                 "kValentine",                "kVisibleSpectrum",      "kWaterMelon",        "kCool",              "kCopper",
+                                 "kGistEarth",                "kViridis",              "kCividis"
+                               };
+   
+     //enum EColorPalette{
+     //                    kDeepSea=51,          kGreyScale=52,    kDarkBodyRadiator=53,
+     //                    kBlueYellow= 54,      kRainBow=55,      kInvertedDarkBodyRadiator=56,
+     //                    kBird=57,             kCubehelix=58,    kGreenRedViolet=59,
+     //                    kBlueRedYellow=60,    kOcean=61,        kColorPrintableOnGrey=62,
+     //                    kAlpine=63,           kAquamarine=64,   kArmy=65,
+     //                    kAtlantic=66,         kAurora=67,       kAvocado=68,         
+     //                    kBeach=69,            kBlackBody=70,    kBlueGreenYellow=71,
+     //                    kBrownCyan=72,        kCMYK=73,         kCandy=74,
+     //                    kCherry=75,           kCoffee=76,       kDarkRainBow=77,
+     //                    kDarkTerrain=78,      kFall=79,         kFruitPunch=80,
+     //                    kFuchsia=81,          kGreyYellow=82,   kGreenBrownTerrain=83,
+     //                    kGreenPink=84,        kIsland=85,       kLake=86,
+     //                    kLightTemperature=87, kLightTerrain=88, kMint=89,
+     //                    kNeon=90,             kPastel=91,       kPearl=92,
+     //                    kPigeon=93,           kPlum=94,         kRedBlue=95,
+     //                    kRose=96,             kRust=97,         kSandyTerrain=98,
+     //                    kSienna=99,           kSolar=100,       kSouthWest=101,
+     //                    kStarryNight=102,     kSunset=103,      kTemperatureMap=104,
+     //                    kThermometer=105,     kValentine=106,   kVisibleSpectrum=107,
+     //                    kWaterMelon=108,      kCool=109,        kCopper=110,
+     //                    kGistEarth=111,       kViridis=112,     kCividis=113
+     //};       
+   
+   
+   
 };
+//_____________________________________________
+//_____________________________________________
 //_____________________________________________
 MyDraw::MyDraw(int ccontnnumber){
 
@@ -469,7 +474,9 @@ MyDraw::MyDraw(int ccontnnumber){
   //gStyle->SetStatW(0.15);
   gStyle->SetStatFontSize(0.03);
   gStyle->SetStatTextColor(1);
-  gStyle->SetTitleX(0.30);
+  gStyle->SetStatX(0.50);
+  gStyle->SetStatY(0.90);
+  gStyle->SetTitleX(0.325);
   gStyle->SetTitleFontSize(0.04);
   gStyle->SetTitleTextColor(1);
   gStyle->SetNdivisions(510); // tertiary*10000 + secondary*100 + first
@@ -491,22 +498,33 @@ MyDraw::~MyDraw(){
 
 //_____________________________________________
 void MyDraw::SetIO(){
-  pdfname  = Form("DrawColorCont_Single_%03d.pdf" ,ItNum);
-  rootname = Form("DrawColorCont_Single_%03d.root",ItNum);
+  pdfname=Form("DrawColorCont_Separated_%03d.pdf",ItNum);
   while( SearchFile(rootpath,rootname)!=0 ){
     ItNum++;
-    rootname = Form("DrawColorCont_Single_%03d.root",ItNum);
-    pdfname  = Form("DrawColorCont_Single_%03d.pdf" ,ItNum);
+    rootname = Form("DrawColorCont_Separated_%03d.root",ItNum);
+    pdfname  = Form("DrawColorCont_Separated_%03d.pdf" ,ItNum);
   }
-  rootname =  Form("DrawColorCont_Single_%03d.root",ItNum);
-  pdfname  =  Form("DrawColorCont_Single_%03d.pdf" ,ItNum);
-  rootname = rootpath+rootname;  cout<<"output file name >> "<<rootname<<endl;
-  pdfname  = pdfpath+pdfname;    cout<<"output file name >> "<<pdfname <<endl;
+  rootname =  Form("DrawColorCont_Separated_%03d.root",ItNum);
+  pdfname  =  Form("DrawColorCont_Separated_%03d.pdf" ,ItNum);
+  rootname = rootpath+rootname;
+  pdfname  = pdfpath+pdfname;
   pdf_op = pdfname + "[";
   pdf_cl = pdfname + "]";
 
-  for(int i=0;i<ncnv;i++)pdfname_[i]= pdfpath+Form("DrawColorCont_Single_%03d_%03d.pdf" ,ItNum,i);
+  for(int i=0;i<nECP;i++){
+    pdfname_[i]      = pdfpath+Form("DrawColorCont_Separated_gaus_%03d_%03d_%s.pdf",ItNum,i,pltcolname[i].c_str() );
+    pdfname_[i+nECP] = pdfpath+Form("DrawColorCont_Separated_bw_%03d_%03d_%s.pdf"  ,ItNum,i,pltcolname[i].c_str() );
+  }
 
+  inputname = "DrawColorCont_Single_000.root";
+  inputname = inputpath + inputname;
+
+  SetRoot();
+}
+
+//_____________________________________________
+void MyDraw::SetRoot(){
+  ifp = new TFile( inputname.c_str(), "READONLY" );
 }
 
 //_____________________________________________
@@ -518,70 +536,64 @@ void MyDraw::DefineCanv(){
 }
 
 //_____________________________________________
-
 void MyDraw::DefineObj(){
-TString htitle;
-for(int i=0; i<ncnv; i++){
-  h_cont[i][0] = new TH2D( Form("h_cont[%d][0]",i), Form("h_cont[%d][0]",i), 250,-5.,5., 250, -5.,5. );
-  h_cont[i][1] = new TH2D( Form("h_cont[%d][1]",i), Form("h_cont[%d][1]",i), 250,-5.,5., 250, -5.,5. );
-  
-  htitle = pltcolname[i]+" Gaus dist.";  SetTH2(h_cont[i][0], htitle, "x", "y");
-  htitle = pltcolname[i]+" B.W. dist";   SetTH2(h_cont[i][1], htitle, "x", "y");
-}//for i
-}
+  TString htitle="";
 
-//_____________________________________________
+  ifp->cd();
+  for(int i=0;i<nECP;i++){
+    for(int j=0;j<2;j++){
+      h_cont[i][j] = (TH2D*)gROOT->FindObject(Form("h_cont_%02d",j));
+      if(!h_cont[i][j])cout<<"\033[1;31m"<<"bbbbbbb"<<"\033[m"<<endl;
+      h_cont[i][j]->SetStats(kFALSE);
+    }// for j
 
-void MyDraw::Fill(){
-  double gax;
-  double gay;
-  double bwx;
-  double bwy;
-  for(int i=0; i<nItr;i++){
-    if( (i%500)==0)cout<<setw(10)<<i<<"/"<<nItr<<"\r"<<flush;
-    gax = gRandom->Gaus(gaMean,gaSigma);
-    gay = gRandom->Gaus(gaMean,gaSigma);
-    bwx = gRandom->BreitWigner(bwMean,bwGamma);
-    bwy = gRandom->BreitWigner(bwMean,bwGamma);
-    h_cont[0][0]->Fill(gax,gay);
-    h_cont[0][1]->Fill(bwx,bwy);
-    //for(int j=0;j<nECP;j++){
-    //  h_cont[j][0]->Fill(gax,gay);
-    //  h_cont[j][1]->Fill(bwx,bwy);
-    //}
+    htitle = pltcolname[i]+" Gaus dist.";  
+    SetTH2(h_cont[i][0], htitle, "x", "y");
+
+    htitle = pltcolname[i]+" B.W. dist";   
+    SetTH2(h_cont[i][1], htitle, "x", "y");
   }
+
 }
 
 //_____________________________________________
+void MyDraw::Fill(){
+}
 
+//_____________________________________________
 void MyDraw::DrawHist(){
   cout<<endl;
   cout<<"Draw start."<<endl;
-  //ca[0]->Print(pdf_op.c_str(), "pdf");
-  ca[0]->cd();	//ca[0]->SetLogz(kTRUE);
-  h_cont[0][0]->Draw("colz");
+  for(int i=0; i<nECP; i++){
+    cout<<setw(4)<<i<<"/"<<nECP<<"\r"<<flush;
+
+    ca[i]->cd();
+    gPad->SetXstat(0.50);
+    gPad->SetYstat(0.90);
+    gPad->SetLogz(kTRUE);
+    if(i>0)gStyle->SetPalette(pltcol[i]);
+    h_cont[i][0]->Draw("colz");
+    RedrawFrame(fr_cont[i][0]);
+    ca[i]->Print(pdfname_[i].c_str());
+    
+    ca[i+nECP]->cd();
+    gPad->SetLogz(kTRUE);
+    if(i>0)gStyle->SetPalette(pltcol[i]);
+    h_cont[i][1]->Draw("colz");
+    RedrawFrame(fr_cont[i][1]);
+    ca[i+nECP]->Print(pdfname_[i+nECP].c_str());
+  }//for i
 
   cout<<endl;
-  cout<<"----"<<endl;
-
-  ca[1]->cd();	//ca[1]->SetLogz(kTRUE);
-  h_cont[0][1]->Draw("colz");
+  cout<<"Draw end."<<endl;
 }
 
 //_____________________________________________
-
 void MyDraw::Export(){
-  ca[0] -> Print( pdf_op.c_str() , "pdf" );
-  ca[0] -> Print( pdfname.c_str(), "pdf" );
-  ca[1] -> Print( pdfname.c_str(), "pdf" );
-  ca[1] -> Print( pdf_cl.c_str() , "pdf" );
-//  ca[0]->Print(pdf_op.c_str(), "pdf");
-//  for(int i=0; i<ncnv; i++){ca[i]->Print(pdfname.c_str(), "pdf");}
-//  ca[ncnv-1]->Print(pdf_cl.c_str(), "pdf");
 
   cout<<"\033[1;33m"<<endl;
   cout<<"==============="<<endl;
-  cout<<"  Info  of MyDraw::Export"                                <<endl;
+  cout<<"  Info  of MyDraw::Export"<<endl;
   cout<<"    This run data was successfully written in "<<pdfname<<"  "<<endl;
   cout<<"==============="<<endl;
   cout<<"\033[m"<<endl;
@@ -590,7 +602,10 @@ void MyDraw::Export(){
   ofp = new TFile( rootname.c_str(), "recreate" );
   ofp->cd();
   for(int i=0; i<ncnv; i++){ca[i]->Write(Form("ca_%02d",i));}
-  for(int i=0; i<ncnv; i++){h_cont[0][i]->Write(Form("h_cont_%02d",i));}
+  for(int i=0; i<nECP; i++){
+   h_cont[i][0]->Write(Form("h_cont_%02d_00",i));
+   h_cont[i][1]->Write(Form("h_cont_%02d_01",i));
+  }
   ofp->Close();
 
   cout<<"\033[1;33m"<<endl;
@@ -602,7 +617,6 @@ void MyDraw::Export(){
   cout<<endl;
 }
 
-//_____________________________________________
 ////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////  main  //////////////////////////////////
@@ -611,7 +625,7 @@ int main(int argc, char** argv){
   int ch;
   string varg;
   string aarg;
-  int anamode=0;
+  //int anamode=0;
   int vflag=0;
   extern char *optarg;
 
@@ -619,35 +633,17 @@ int main(int argc, char** argv){
   TStopwatch *Stw;
 
   string file="tmp.root";
-  int runnum=6;
-  bool debug=kFALSE;
+  //int runnum=6;
+  //bool debug=kFALSE;
 	
   cout<<"Processing..."<<endl;
   while( (ch=getopt(argc,argv,"hdr:f:"))!=-1 ){
     cout<<"---"<<endl;
     switch(ch){
-      case 'r':
-      runnum=atoi(optarg);
-      cout<<"\033[1m"<<"Target RunNum: "<<runnum<<"\033[m"<<endl;
-      break;
-      
-      case 'f':
-      file = optarg;
-      cout<<"\033[1m"<<"Target File name: "<<file<<"\033[m"<<endl;
-      break;
-      
-      case 'd':
-      cout<<"\033[32;1m"<<"Debug Mode On"<<"\033[m"<<endl;
-      debug=true;
-      break;
-      
+
       case 'h':
       cout<<endl;
       cout<<"\033[1;36m============ HELP ============\033[m"<<endl;
-      cout<<endl;
-      cout<<"\033[1;36m   -r : RunNum (4digit integer)\033[m"<<endl;
-      cout<<endl;
-      cout<<"\033[1;36m   -f : filename\033[m"<<endl;
       cout<<endl;
       cout<<"\033[1;36m==============================\033[m"<<endl;
       cout<<endl;
@@ -687,7 +683,7 @@ int main(int argc, char** argv){
   cout<<"---"<<endl;
   cout<<endl;
   cout<<"=============================="<<endl;
-  cout<<"\033[1;35m  Total Time: "<<Stw->RealTime()<<" sec \033[m"<<endl;
+  cout<<"\033[1;m  Total Time: "<<Stw->RealTime()<<" sec \033[m"<<endl;
   cout<<"=============================="<<endl;
   cout<<endl;
 
