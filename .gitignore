@@ -47,14 +47,17 @@
 *.root
 
 # binary and others
+### ExpGaus
 /ExpGaus/bin/
 /ExpGaus/lib/
 /ExpGaus/fig/
 
+### HypChart
 /HypChart/bin/
 /HypChart/lib/
 /HypChart/fig/
 
+### HyperDiag
 /HyperDiag/bin/
 /HyperDiag/lib/
 /HyperDiag/fig/
@@ -62,6 +65,17 @@
 /HyperDiag/src/lib/
 /HyperDiag/src/fig/
 
+### htl
 /htl/bin/
 /htl/lib/
 /htl/fig/
+
+### Betaray
+/Betaray/bin/
+/Betaray/lib/
+
+### ColorCont
+/ColorCont/bin/
+/ColorCont/lib/
+/ColorCont/output/
+/ColorCont/pdf/
